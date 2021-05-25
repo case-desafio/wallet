@@ -58,6 +58,7 @@ public class AssetsController {
     @ResponseStatus(code = HttpStatus.OK)
     public AssetsResponse findByTicker(@PathVariable Long id, @PathVariable String ticker) {
         var assets = assetsService.findByUserAccountIdAndTicker(id, ticker).orElseThrow(() -> {
+            log.info(String.format("Nenhum ativo encontrado para o ticker %s", ticker));
             throw new NoResultException(String.format("Nenhum ativo encontrado para o ticker [%s]", ticker));
         });
         return mapper(assets);
