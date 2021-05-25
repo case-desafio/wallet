@@ -4,10 +4,6 @@ import com.demo.wallet.assets.service.AssetsService;
 import com.demo.wallet.entity.Assets;
 import com.demo.wallet.entity.UserAccount;
 import com.demo.wallet.exception.NoResultException;
-import com.demo.wallet.exception.UserAccountAlreadyRegisteredException;
-import com.demo.wallet.userAccount.UserAccountController;
-import com.demo.wallet.userAccount.UserAccountRequest;
-import com.demo.wallet.userAccount.UserAccountResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.demo.wallet.assets.AssetsReponseMapper.mapper;
