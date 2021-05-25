@@ -1,13 +1,9 @@
 package com.demo.wallet.entity;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Objects;
 
 @Entity
 @Table(name = "ASSETS", uniqueConstraints = {
@@ -17,9 +13,6 @@ import java.util.Objects;
         )
 })
 public class Assets {
-
-    private static final Logger log =
-            LoggerFactory.getLogger(Assets.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,30 +55,6 @@ public class Assets {
         this.quantity = quantity;
         this.amount = amount;
         this.userAccount = userAccount;
-    }
-
-    private Assets(@NonNull Assets assets) {
-        this(assets.getId(), assets.getOperationType(),
-                assets.getTicker(), assets.getQuantity(),
-                assets.getAveragePrice(), assets.getTotalPrice(),
-                assets.getUserAccount(), assets.getAmount(),
-                assets.getVersion()
-        );
-    }
-
-    private Assets(@NonNull Long id, @NonNull OperationType operationType,
-                   @NonNull String ticker, @NonNull BigDecimal quantity,
-                   @NonNull BigDecimal averagePrice, @NonNull BigDecimal totalPrice,
-                   @NonNull UserAccount userAccount, @NonNull BigDecimal amount, @NonNull Long version) {
-        this.id = id;
-        this.operationType = operationType;
-        this.ticker = ticker;
-        this.quantity = quantity;
-        this.averagePrice = averagePrice;
-        this.totalPrice = totalPrice;
-        this.userAccount = userAccount;
-        this.amount = amount;
-        this.version = version;
     }
 
     @Version
@@ -142,6 +111,18 @@ public class Assets {
         this.userAccount = userAccount;
     }
 
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setAveragePrice(BigDecimal averagePrice) {
+        this.averagePrice = averagePrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     @Override
     public String toString() {
         return "Assets{" +
@@ -152,34 +133,6 @@ public class Assets {
                 ", totalPrice=" + totalPrice +
                 ", userAccount=" + userAccount +
                 '}';
-    }
-
-    @PrePersist
-    private void prePersist() {
-        Objects.requireNonNull(quantity);
-        Objects.requireNonNull(amount);
-        totalPrice = totalPrice!= null
-                ? totalPrice.add(amount)
-                : amount;
-    }
-
-    public Assets recalculate(Assets oldAssets) {
-        if (oldAssets == null) {
-            this.averagePrice = this.amount.divide(this.quantity, RoundingMode.HALF_UP);
-            return new Assets(this);
-        }
-
-        log.info("Recalculando ativo {}", this);
-        if (OperationType.BUY.equals(operationType)) {
-            this.quantity = this.quantity.add(oldAssets.getQuantity());
-            this.amount = this.amount.add(oldAssets.getAmount());
-            this.averagePrice = this.amount.divide(oldAssets.getAmount(), RoundingMode.HALF_UP);
-        } else {
-            this.quantity = this.quantity.subtract(oldAssets.getQuantity());
-            this.amount = this.quantity.multiply(averagePrice);
-        }
-        log.info("Ativo recalculado {}", this);
-        return new Assets(this);
     }
 
 }

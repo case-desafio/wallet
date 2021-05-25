@@ -1,6 +1,7 @@
 package com.demo.wallet.config;
 
 import com.demo.wallet.exception.NoResultException;
+import com.demo.wallet.exception.UnsupportedOperationTypeException;
 import com.demo.wallet.exception.UserAccountAlreadyRegisteredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -27,9 +28,10 @@ public class ExceptionAdviceConfiguration {
     }
 
     @ResponseBody
-    @ExceptionHandler(value = UserAccountAlreadyRegisteredException.class)
+    @ExceptionHandler(value = {UserAccountAlreadyRegisteredException.class,
+            UnsupportedOperationTypeException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Error badRquestErrorExceptionHandler(ResponseStatusException e) {
+    public Error badRquestErrorExceptionHandler(RuntimeException e) {
         return new Error(e.getMessage());
     }
 

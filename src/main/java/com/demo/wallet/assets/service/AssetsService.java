@@ -2,7 +2,10 @@ package com.demo.wallet.assets.service;
 
 import com.demo.wallet.assets.repository.AssetsRepository;
 import com.demo.wallet.entity.Assets;
+import com.demo.wallet.entity.AssetsRecalculate;
+import com.demo.wallet.entity.OperationType;
 import com.demo.wallet.exception.NoResultException;
+import com.demo.wallet.exception.UnsupportedOperationTypeException;
 import com.demo.wallet.userAccount.repository.UserAccountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +38,12 @@ public class AssetsService {
 
         var assetsPersited = this.findByUserAccountIdAndTicker(assets.getUserAccount().getId(), assets.getTicker()).orElse(null);
 
-        var calculatedAsset = assets.recalculate(assetsPersited);
+        if (OperationType.SALE.equals(assets.getOperationType())
+                && (assetsPersited == null || assets.getQuantity().compareTo(assetsPersited.getQuantity())> 0)) {
+            throw new UnsupportedOperationTypeException();
+        }
+
+        var calculatedAsset = new AssetsRecalculate(assets, assetsPersited).recalculate();
 
         log.info("Inserindo ativo {}", calculatedAsset);
         calculatedAsset = assetsRepository.save(calculatedAsset);
