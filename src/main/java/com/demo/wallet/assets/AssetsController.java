@@ -35,13 +35,12 @@ public class AssetsController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<AssetsResponse> create(@Valid @RequestBody @NonNull AssetsRequest assetsRequest) {
         var assets = new Assets(
-                assetsRequest.getOperationType(),
                 assetsRequest.getTicker(),
                 assetsRequest.getQuantity(),
                 assetsRequest.getAmount(),
                 new UserAccount(assetsRequest.getUserAccountMail())
         );
-        assets = assetsService.save(assets);
+        assets = assetsService.save(assets, assetsRequest.getOperationType());
         return ResponseEntity.created(URI.create("/" + assets.getId())).body(mapper(assets));
     }
 

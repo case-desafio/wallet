@@ -19,10 +19,6 @@ public class Assets {
     @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Column(name = "OPERATION_TYPE", length = 4)
-    @Enumerated(EnumType.STRING)
-    private OperationType operationType;
-
     @Column(name = "TICKER", nullable = false, length = 10)
     private String ticker;
 
@@ -45,12 +41,10 @@ public class Assets {
     public Assets() {
     }
 
-    public Assets(@NonNull OperationType operationType,
-                  @NonNull String ticker,
+    public Assets(@NonNull String ticker,
                   @NonNull BigDecimal quantity,
                   @NonNull BigDecimal amount,
                   @NonNull UserAccount userAccount) {
-        this.operationType = operationType;
         this.ticker = ticker;
         this.quantity = quantity;
         this.amount = amount;
@@ -62,10 +56,6 @@ public class Assets {
 
     public Long getId() {
         return id;
-    }
-
-    public OperationType getOperationType() {
-        return operationType;
     }
 
     public String getTicker() {

@@ -11,10 +11,12 @@ public class AssetsRecalculate {
             LoggerFactory.getLogger(Assets.class);
     private final Assets current;
     private final Assets persisted;
+    private OperationType operationType;
 
-    public AssetsRecalculate(Assets current, Assets persisted){
+    public AssetsRecalculate(Assets current, Assets persisted, OperationType operationType){
         this.current = current;
         this.persisted = persisted;
+        this.operationType = operationType;
     }
 
     public Assets recalculate() {
@@ -25,7 +27,7 @@ public class AssetsRecalculate {
         }
 
         log.info("Recalculando ativo {}", this);
-        if (OperationType.BUY.equals(current.getOperationType())) {
+        if (OperationType.BUY.equals(operationType)) {
             persisted.setQuantity(persisted.getQuantity().add(current.getQuantity()));
             persisted.setTotalPrice(persisted.getTotalPrice().add(current.getAmount()));
             persisted.setAveragePrice(persisted.getTotalPrice().divide(persisted.getQuantity(), RoundingMode.HALF_UP));

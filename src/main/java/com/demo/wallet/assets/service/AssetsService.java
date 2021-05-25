@@ -29,7 +29,7 @@ public class AssetsService {
         this.userAccountRepository = userAccountRepository;
     }
 
-    public Assets save(Assets assets) {
+    public Assets save(Assets assets, OperationType operationType) {
         final String mail = assets.getUserAccountEmail();
         var userAccount = userAccountRepository.findByMail(mail).orElseThrow(() -> {
             throw new NoResultException(String.format("Conta de usuário %s não cadastrada", mail));
@@ -38,12 +38,12 @@ public class AssetsService {
 
         var assetsPersited = this.findByUserAccountIdAndTicker(assets.getUserAccount().getId(), assets.getTicker()).orElse(null);
 
-        if (OperationType.SALE.equals(assets.getOperationType())
+        if (OperationType.SALE.equals(operationType)
                 && (assetsPersited == null || assets.getQuantity().compareTo(assetsPersited.getQuantity())> 0)) {
             throw new UnsupportedOperationTypeException();
         }
 
-        var calculatedAsset = new AssetsRecalculate(assets, assetsPersited).recalculate();
+        var calculatedAsset = new AssetsRecalculate(assets, assetsPersited, operationType).recalculate();
 
         log.info("Inserindo ativo {}", calculatedAsset);
         calculatedAsset = assetsRepository.save(calculatedAsset);
