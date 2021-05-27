@@ -40,4 +40,6 @@ management:
       show-details: always
     info:
       enabled: 'true'
-
+springdoc:
+  api-docs:
+    path: '/api-docs'

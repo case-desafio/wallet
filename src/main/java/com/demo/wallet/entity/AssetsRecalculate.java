@@ -11,7 +11,7 @@ public class AssetsRecalculate {
             LoggerFactory.getLogger(Assets.class);
     private final Assets current;
     private final Assets persisted;
-    private OperationType operationType;
+    private final OperationType operationType;
 
     public AssetsRecalculate(Assets current, Assets persisted, OperationType operationType){
         this.current = current;
@@ -26,7 +26,7 @@ public class AssetsRecalculate {
             return current;
         }
 
-        log.info("Recalculando ativo {}", this);
+        log.info("Recalculando ativo {}", persisted);
         if (OperationType.BUY.equals(operationType)) {
             persisted.setQuantity(persisted.getQuantity().add(current.getQuantity()));
             persisted.setTotalPrice(persisted.getTotalPrice().add(current.getAmount()));
@@ -35,7 +35,7 @@ public class AssetsRecalculate {
             persisted.setQuantity(persisted.getQuantity().subtract(current.getQuantity()));
             persisted.setTotalPrice(persisted.getQuantity().multiply(persisted.getAveragePrice()));
         }
-        log.info("Ativo recalculado {}", this);
+        log.info("Ativo recalculado {}", persisted);
         return persisted;
     }
 
