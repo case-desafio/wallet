@@ -36,14 +36,14 @@ public class AssetsService {
         });
         assets.setUserAccount(userAccount);
 
-        var assetsPersited = this.findByUserAccountIdAndTicker(assets.getUserAccount().getId(), assets.getTicker()).orElse(null);
+        var persistedAsset = this.findByUserAccountIdAndTicker(assets.getUserAccount().getId(), assets.getTicker()).orElse(null);
 
         if (OperationType.SALE.equals(operationType)
-                && (assetsPersited == null || assets.getQuantity().compareTo(assetsPersited.getQuantity())> 0)) {
+                && (persistedAsset == null || assets.quantityGreaterThanOrEqual(persistedAsset))) {
             throw new UnsupportedOperationTypeException();
         }
 
-        var calculatedAsset = new AssetsRecalculate(assets, assetsPersited, operationType).recalculate();
+        var calculatedAsset = new AssetsRecalculate(assets, persistedAsset, operationType).recalculate();
 
         log.info("Inserindo ativo {}", calculatedAsset);
         calculatedAsset = assetsRepository.save(calculatedAsset);

@@ -30,7 +30,6 @@ public class UserAccountController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<UserAccountResponse> create(@Valid @RequestBody @NonNull UserAccountRequest userAccountRequest) {
-
         log.info("Verificando se conta de usuário {} já está cadastrada", userAccountRequest.getMail());
         var userAccountOptional = userAccountRepository.findByMail(userAccountRequest.getMail());
         if (userAccountOptional.isPresent() && userAccountOptional.get().getId() != null) {

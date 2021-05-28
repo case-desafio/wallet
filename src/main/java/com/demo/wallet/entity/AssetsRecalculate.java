@@ -30,7 +30,7 @@ public class AssetsRecalculate {
         if (OperationType.BUY.equals(operationType)) {
             persisted.setQuantity(persisted.getQuantity().add(current.getQuantity()));
             persisted.setTotalPrice(persisted.getTotalPrice().add(current.getAmount()));
-            persisted.setAveragePrice(persisted.getTotalPrice().divide(persisted.getQuantity(), RoundingMode.HALF_UP));
+            persisted.setAveragePrice(persisted.getTotalPrice().divide(persisted.getQuantity(), 2, RoundingMode.HALF_UP));
         } else {
             persisted.setQuantity(persisted.getQuantity().subtract(current.getQuantity()));
             persisted.setTotalPrice(persisted.getQuantity().multiply(persisted.getAveragePrice()));

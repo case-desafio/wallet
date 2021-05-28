@@ -4,6 +4,7 @@ import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name = "ASSETS", uniqueConstraints = {
@@ -123,6 +124,13 @@ public class Assets {
                 ", totalPrice=" + totalPrice +
                 ", userAccount=" + userAccount +
                 '}';
+    }
+
+    public boolean quantityGreaterThanOrEqual(@NonNull Assets other) {
+        Objects.requireNonNull(other);
+        Objects.requireNonNull(other.getQuantity());
+        return this.quantity != null
+                && !(this.quantity.compareTo(other.getQuantity()) < 0);
     }
 
 }
